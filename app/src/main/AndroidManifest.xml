@@ -26,8 +26,15 @@
                 <action android:name="android.intent.action.CREATE_SHORTCUT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".details.MoviesDetailsActivity">
+        <activity
+            android:name=".details.MoviesDetailsActivity"
+            android:parentActivityName=".movies.MoviesActivity"
+            android:theme="@style/AppTheme.Details">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".movies.MoviesActivity"/>
         </activity>
+
     </application>
 
 </manifest>

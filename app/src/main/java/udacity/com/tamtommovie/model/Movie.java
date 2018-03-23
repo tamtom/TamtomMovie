@@ -47,6 +47,15 @@ public class Movie implements Parcelable {
 
     @SerializedName("release_date")
     Date releaseDate;
+    int runtime;
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
 
     public Movie() {
     }

@@ -46,17 +46,14 @@ public class MoviesActivity extends AppCompatActivity {
                     setTitle(R.string.top_rated_movies);
                     return true;
                 case R.id.navigation_favorite:
-
                     MyApplication.getPrefManager().putString(Constants.PrefKeys
                             .LAST_SELECTED_TAB, Constants.TabsType.FAVORITE_TAB);
-
                     return true;
             }
             return false;
         }
     };
     private MoviesPresenter mMoviesPresenter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +74,6 @@ public class MoviesActivity extends AppCompatActivity {
             transaction.add(R.id.fragment_container, moviesFragment);
             transaction.commit();
         }
-
         // Create the presenter
         mMoviesPresenter = new MoviesPresenter(RetrofitWrapper.getInstance().getApiService(),
                 moviesFragment);
@@ -85,13 +81,15 @@ public class MoviesActivity extends AppCompatActivity {
                 .LAST_SELECTED_TAB, Constants.TabsType.POPULAR_TAB);
         switch (lastSelectedTab) {
             case Constants.TabsType.POPULAR_TAB:
+                mNavigationView.setSelectedItemId(R.id.navigation_popular);
                 setTitle(R.string.popular_movies);
                 break;
             case Constants.TabsType.TOP_RATED_TAB:
+                mNavigationView.setSelectedItemId(R.id.navigation_top_rated);
                 setTitle(R.string.top_rated_movies);
                 break;
-
             case Constants.TabsType.FAVORITE_TAB:
+                mNavigationView.setSelectedItemId(R.id.navigation_favorite);
                 setTitle(R.string.title_menu_favorite);
                 break;
         }

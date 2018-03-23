@@ -103,8 +103,8 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @Override
     public Observable<MoviesResult> getMoviesObservable(String type) {
         return Constants.MoviesType.POPULAR.equals(type) ?
-                mAPIService.getPopularMovies(Constants.API_KEY, mCurrentPopularPage)
-                : mAPIService.getTopRatedMovies(Constants.API_KEY, mCurrentTopRatedPage);
+                mAPIService.getPopularMovies( mCurrentPopularPage)
+                : mAPIService.getTopRatedMovies( mCurrentTopRatedPage);
     }
 
     @Override

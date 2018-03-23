@@ -21,14 +21,14 @@
             android:layout_marginTop="32dp"
             android:layout_toEndOf="@id/moviePoster"
             android:paddingBottom="5dp"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp"
+            android:paddingEnd="14dp"
+            android:paddingStart="14dp"
             android:paddingTop="5dp"
 
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/white"
             fancy:fb_borderColor="@color/colorAccent"
-            fancy:fb_borderWidth="4dp"
+            fancy:fb_borderWidth="2dp"
             fancy:fb_defaultColor="@color/colorPrimary"
             fancy:fb_focusColor="@color/colorPrimary"
             fancy:fb_radius="30dp"
@@ -68,6 +68,7 @@
             android:layout_marginTop="12dp"
             android:layout_toEndOf="@+id/moviePoster"
             android:tint="@color/colorAccent"
+            android:visibility="invisible"
             app:srcCompat="@drawable/ic_access_time_24dp"/>
 
         <android.support.v7.widget.AppCompatTextView
@@ -82,6 +83,7 @@
             android:layout_toEndOf="@+id/durationIcon"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/white"
+            android:visibility="invisible"
             tools:text="3h 55m"/>
 
         <android.support.v7.widget.AppCompatTextView
@@ -109,13 +111,14 @@
             android:stepSize="0.1"
             app:mrb_progressBackgroundTint="@color/colorAccent"
             tools:rating="4."/>
+
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/voteCount"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
+            android:layout_below="@+id/ratingBar"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_below="@+id/ratingBar"
             android:layout_toEndOf="@+id/movieRating"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryLight"
@@ -145,7 +148,9 @@
             android:layout_below="@+id/overViewLabel"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="Ex-hitman John Wick comes out of retirement to track down the gangsters that took everything from him
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/white"
+            tools:text="Ex-hitman John Wick comes out of retirement to track down the gangsters that took everything from him
          to track down the gangsters that took everything from him
          to track down the gangsters that took everything from him
          to track down the gangsters that took everything from him
@@ -159,8 +164,6 @@
          to track down the gangsters that took everything from him
 
          .."
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
-            android:textColor="@color/white"
             />
 
     </RelativeLayout>

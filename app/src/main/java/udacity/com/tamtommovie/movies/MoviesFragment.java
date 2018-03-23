@@ -133,7 +133,8 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
         } else
 
         {
-            mGridLayoutManager.setSpanCount(2);
+            mGridLayoutManager.setSpanCount( getResources().getInteger(R
+                    .integer.grid_count));
             mMovieAdapter.updateMovies(movies);
         }
         if (mSnackbar != null && mSnackbar.isShown()) {

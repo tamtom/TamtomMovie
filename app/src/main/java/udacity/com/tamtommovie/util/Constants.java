@@ -7,7 +7,7 @@ package udacity.com.tamtommovie.util;
 public interface Constants {
     String API_BASE_URL = "https://api.themoviedb.org/3/";
     String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
-    String API_KEY = "cae403782bdd6c7ddad2bbffbff5c405";
+    String API_KEY = ""; // your API KEY
 
     String PATH_POSTER_W185 = "w342";
     String PATH_BACKDROP_W780 = "w780";
