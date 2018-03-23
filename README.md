@@ -9,7 +9,6 @@ MVP + RxJava
 ## Libraries and SDKs Used
 - [Android Support Libraries](https://developer.android.com/topic/libraries/support-library/packages.html) 
 - [RxJava + RxAndroid](https://github.com/ReactiveX/RxJava)
-- [Dagger 2](https://google.github.io/dagger/)
 - [Retrofit](http://square.github.io/retrofit/)
 - [Gson](https://github.com/google/gson)
 - [Picasso](http://square.github.io/picasso/)
