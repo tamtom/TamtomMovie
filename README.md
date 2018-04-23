@@ -1,6 +1,6 @@
-#  PopularMoviesStage
-The Second project for the Udacity Android Developer Nanodegree
-## Screenshots
+#Sample Movie App
+This app shows Latest Movies and their details  
+Detail page is displayed with poster, title, trailer ## Screenshots
 <img src="screenshots/1.png" height="640" width="360">  <img src="screenshots/2.png" height="640" width="360">
 <img src="screenshots/3.png" height="360" width="640"> 
  <img src="screenshots/4.png" height="640" width="360">
