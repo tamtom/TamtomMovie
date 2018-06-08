@@ -2,6 +2,7 @@ package udacity.com.tamtommovie.movies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,10 +21,12 @@ import android.widget.ImageView;
 import java.util.List;
 
 import butterknife.BindView;
+import udacity.com.tamtommovie.MyApplication;
 import udacity.com.tamtommovie.R;
 import udacity.com.tamtommovie.base.BaseFragment;
 import udacity.com.tamtommovie.details.MoviesDetailsActivity;
 import udacity.com.tamtommovie.model.Movie;
+import udacity.com.tamtommovie.util.Constants;
 
 import static android.support.design.widget.Snackbar.LENGTH_INDEFINITE;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -41,6 +44,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
     private GridLayoutManager mGridLayoutManager;
 
     private MoviesContract.Presenter mPresenter;
+
 
     public MoviesFragment() {
         // Required empty public constructor
@@ -117,11 +121,13 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
+                    if (Constants.TabsType.FAVORITE_TAB.equals(MyApplication.getPrefManager()
+                            .getString(Constants.PrefKeys.LAST_SELECTED_TAB)))
+                        return;
                     int visibleItemCount = mGridLayoutManager.getChildCount();
                     int totalItemCount = mGridLayoutManager.getItemCount();
                     int firstVisibleItemPosition = mGridLayoutManager
                             .findFirstVisibleItemPosition();
-
                     // Load more if we have reach the end to the recyclerView
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
                             firstVisibleItemPosition >= 0) {
@@ -133,7 +139,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
         } else
 
         {
-            mGridLayoutManager.setSpanCount( getResources().getInteger(R
+            mGridLayoutManager.setSpanCount(getResources().getInteger(R
                     .integer.grid_count));
             mMovieAdapter.updateMovies(movies);
         }
@@ -184,6 +190,19 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
     }
 
     @Override
+    public void showFavorites(Cursor cursor) {
+        mMovieAdapter = null;
+        FavoriteAdapter favoriteAdapter = new FavoriteAdapter((movie, sharedImage) -> mPresenter
+                .openMovieDetails(movie, sharedImage));
+        mRvMovies.setAdapter(favoriteAdapter);
+        mGridLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R
+                .integer.grid_count));
+        mRvMovies.setLayoutManager(mGridLayoutManager);
+        favoriteAdapter.updateCursor(cursor);
+        setLoadingIndicator(false);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mPresenter.unsubscribe();
@@ -192,6 +211,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
     @Override
     public void onResume() {
         super.onResume();
+
         if (mMovieAdapter != null && mMovieAdapter.getItemCount() > 0)
             return;
         mPresenter.subscribe();

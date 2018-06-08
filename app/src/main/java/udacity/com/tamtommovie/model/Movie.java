@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  */
 
 public class Movie implements Parcelable {
-    int id;
+    long id;
     boolean video;
 
     @SerializedName("vote_count")
@@ -48,6 +47,12 @@ public class Movie implements Parcelable {
     @SerializedName("release_date")
     Date releaseDate;
     int runtime;
+    private Videos videos;
+    private MovieReviews reviews;
+
+    public MovieReviews getReviews() {
+        return reviews;
+    }
 
     public int getRuntime() {
         return runtime;
@@ -60,11 +65,15 @@ public class Movie implements Parcelable {
     public Movie() {
     }
 
-    public int getId() {
+    public Videos getVideos() {
+        return videos;
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -173,7 +182,6 @@ public class Movie implements Parcelable {
     }
 
 
-
     @Override
     public int describeContents() {
         return 0;
@@ -181,7 +189,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
+        dest.writeLong(this.id);
         dest.writeByte(this.video ? (byte) 1 : (byte) 0);
         dest.writeInt(this.voteCount);
         dest.writeFloat(this.voteAverage);
@@ -194,11 +202,11 @@ public class Movie implements Parcelable {
         dest.writeByte(this.adult ? (byte) 1 : (byte) 0);
         dest.writeString(this.overview);
         dest.writeLong(this.releaseDate != null ? this.releaseDate.getTime() : -1);
-
+        dest.writeInt(this.runtime);
     }
 
     protected Movie(Parcel in) {
-        this.id = in.readInt();
+        this.id = in.readLong();
         this.video = in.readByte() != 0;
         this.voteCount = in.readInt();
         this.voteAverage = in.readFloat();
@@ -212,7 +220,7 @@ public class Movie implements Parcelable {
         this.overview = in.readString();
         long tmpReleaseDate = in.readLong();
         this.releaseDate = tmpReleaseDate == -1 ? null : new Date(tmpReleaseDate);
-
+        this.runtime = in.readInt();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {

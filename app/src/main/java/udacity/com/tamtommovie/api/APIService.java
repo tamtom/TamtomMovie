@@ -14,14 +14,15 @@ import udacity.com.tamtommovie.model.MoviesResult;
 public interface APIService {
 
     @GET("movie/popular")
-    Observable<MoviesResult> getPopularMovies( @Query("page") int
-            page);
+    Observable<MoviesResult> getPopularMovies(@Query("page") int
+                                                      page);
 
     @GET("movie/top_rated")
-    Observable<MoviesResult> getTopRatedMovies( @Query("page")
-            int page);
+    Observable<MoviesResult> getTopRatedMovies(@Query("page")
+                                                       int page);
 
     @GET("movie/{movie_id}")
-    Observable<Movie> getMovieDetails(@Path("movie_id") long id);
+    Observable<Movie> getMovieDetails(@Path("movie_id") long id,
+                                      @Query("append_to_response") String appendToResponse);
 
 }

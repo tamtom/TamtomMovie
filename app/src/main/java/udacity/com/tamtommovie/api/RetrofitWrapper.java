@@ -14,7 +14,8 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import udacity.com.tamtommovie.util.Constants;
+import udacity.com.tamtommovie.BuildConfig;
+
 
 import static udacity.com.tamtommovie.util.Constants.API_BASE_URL;
 
@@ -65,7 +66,7 @@ public class RetrofitWrapper {
                 Request original = chain.request();
                 HttpUrl originalHttpUrl = original.url();
                 HttpUrl url = originalHttpUrl.newBuilder()
-                        .addQueryParameter("api_key", Constants.API_KEY)
+                        .addQueryParameter("api_key", BuildConfig.TMDB_API_KEY)
                         .build();
                 // Request customization: add request headers
                 Request.Builder requestBuilder = original.newBuilder()

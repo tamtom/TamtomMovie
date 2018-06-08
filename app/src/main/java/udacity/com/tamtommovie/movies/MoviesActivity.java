@@ -48,6 +48,8 @@ public class MoviesActivity extends AppCompatActivity {
                 case R.id.navigation_favorite:
                     MyApplication.getPrefManager().putString(Constants.PrefKeys
                             .LAST_SELECTED_TAB, Constants.TabsType.FAVORITE_TAB);
+                    mMoviesPresenter.loadFavorites();
+                    setTitle(R.string.title_menu_favorite);
                     return true;
             }
             return false;

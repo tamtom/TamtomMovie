@@ -1,5 +1,6 @@
 package udacity.com.tamtommovie.movies;
 
+import android.database.Cursor;
 import android.widget.ImageView;
 
 import java.util.List;
@@ -26,6 +27,8 @@ public interface MoviesContract {
 
         void showLoadingMoviesError(ErrorType errorType);
 
+        void showFavorites(Cursor cursor);
+
 
     }
 
@@ -37,5 +40,6 @@ public interface MoviesContract {
         Observable<MoviesResult> getMoviesObservable(String type);
 
         String getMoviesType();
+        void loadFavorites();
     }
 }

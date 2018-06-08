@@ -35,6 +35,10 @@
                 android:value=".movies.MoviesActivity"/>
         </activity>
 
+        <provider
+            android:name=".favorites.FavoriteMoviesContentProvider"
+            android:authorities="udacity.com.tamtommovie"
+            android:exported="false" />
     </application>
 
 </manifest>

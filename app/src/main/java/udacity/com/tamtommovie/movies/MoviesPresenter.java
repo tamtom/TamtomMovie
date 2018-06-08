@@ -1,5 +1,6 @@
 package udacity.com.tamtommovie.movies;
 
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
@@ -11,6 +12,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import udacity.com.tamtommovie.MyApplication;
 import udacity.com.tamtommovie.api.APIService;
+import udacity.com.tamtommovie.favorites.FavoriteMoviesRepository;
 import udacity.com.tamtommovie.model.Movie;
 import udacity.com.tamtommovie.model.MoviesResult;
 import udacity.com.tamtommovie.util.Constants;
@@ -29,6 +31,7 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     private final MoviesContract.View mMoviesView;
     @NonNull
     private CompositeDisposable mCompositeDisposable;
+    private final FavoriteMoviesRepository mFavoriteMoviesRepository;
     int mCurrentPopularPage = 1;
     int mCurrentTopRatedPage = 1;
 
@@ -38,12 +41,18 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                 " null");
         mMoviesView = checkNotNull(moviesView, "Movie View Cannot be null");
         mCompositeDisposable = new CompositeDisposable();
+        mFavoriteMoviesRepository = FavoriteMoviesRepository.getInstance();
         mMoviesView.setPresenter(this);
     }
 
 
     @Override
     public void subscribe() {
+        if ((Constants.TabsType.FAVORITE_TAB).equals(MyApplication.getPrefManager().getString
+                (Constants.PrefKeys.LAST_SELECTED_TAB))) {
+            loadFavorites();
+            return;
+        }
         loadMovies(false);
     }
 
@@ -100,16 +109,41 @@ public class MoviesPresenter implements MoviesContract.Presenter {
         mMoviesView.showMovieDetailsUi(movie, sharedImage);
     }
 
+    private Observable<Cursor> getFavorites() {
+        return mFavoriteMoviesRepository.queryAllFavoriteMovies();
+    }
+
     @Override
     public Observable<MoviesResult> getMoviesObservable(String type) {
         return Constants.MoviesType.POPULAR.equals(type) ?
-                mAPIService.getPopularMovies( mCurrentPopularPage)
-                : mAPIService.getTopRatedMovies( mCurrentTopRatedPage);
+                mAPIService.getPopularMovies(mCurrentPopularPage)
+                : mAPIService.getTopRatedMovies(mCurrentTopRatedPage);
     }
 
     @Override
     public String getMoviesType() {
         return MyApplication.getPrefManager().getString(Constants.PrefKeys.MOVIES_TYPE_KEY,
                 Constants.MoviesType.TOP_RATED);
+    }
+
+    @Override
+    public void loadFavorites() {
+        mMoviesView.setLoadingIndicator(true);
+        mCompositeDisposable.add(getFavorites().subscribeWith(new DisposableObserver<Cursor>() {
+            @Override
+            public void onNext(Cursor c) {
+                mMoviesView.showFavorites(c);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
     }
 }

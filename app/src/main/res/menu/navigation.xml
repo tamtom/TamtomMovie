@@ -12,7 +12,6 @@
         android:title="@string/title_menu_top_rated"/>
 
     <item
-        android:enabled="false"
         android:id="@+id/navigation_favorite"
         android:icon="@drawable/ic_favorite_white_24dp"
         android:title="@string/title_menu_favorite"/>

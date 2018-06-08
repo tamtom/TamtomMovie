@@ -126,11 +126,33 @@
             tools:text="2344 VOTES"/>
 
 
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/addToFavoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingTop="12dp"
+            android:layout_centerInParent="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/movieRating"
+            fancy:fb_defaultColor="@color/colorAccent"
+            fancy:fb_focusColor="#b68b00"
+            fancy:fb_iconPosition="left"
+            android:layout_below="@+id/movieRating"
+
+            fancy:fb_radius="30dp"
+            fancy:fb_text="@string/add_to_favorites"
+            fancy:fb_textColor="#FFFFFF" />
+
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/overViewLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/movieRating"
+            android:layout_below="@+id/addToFavoriteButton"
             android:layout_marginTop="28dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
@@ -150,21 +172,69 @@
             android:paddingRight="16dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="@color/white"
-            tools:text="Ex-hitman John Wick comes out of retirement to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-                  to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-         to track down the gangsters that took everything from him
-
-         .."
+            tools:text=".."
             />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/trailerLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/movieOverview"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/videos_label"
+            android:textAllCaps="true"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <ProgressBar
+            android:id="@+id/trailerProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailerLabel"
+            android:layout_centerInParent="true"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/trailers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/trailerLabel"/>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/reviewsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/trailers"
+            android:layout_marginTop="28dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="@string/reviews_label"
+            android:textAllCaps="true"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <ProgressBar
+            android:id="@+id/reviewProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reviewsLabel"
+            android:layout_centerInParent="true"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_reviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/reviewsLabel"/>
+        <View
+            android:layout_below="@id/rv_reviews"
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"/>
 
     </RelativeLayout>
 </LinearLayout>

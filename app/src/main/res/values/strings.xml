@@ -17,4 +17,8 @@
     <string name="actors_label">actors</string>
     <string name="overview_label">description</string>
     <string name="add_to_favorites">add to favorite</string>
+    <string name="remove_from_favorites">remove from favorite</string>
+    <string name="youtube_video_choser_title">Play video with</string>
+    <string name="add_msg">Added to favorites</string>
+    <string name="remove_msg">Removed from favorites</string>
 </resources>
