@@ -1,8 +1,11 @@
 package udacity.com.tamtommovie.movies;
 
 import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -23,8 +26,6 @@ public interface MoviesContract {
 
         void showMovieDetailsUi(Movie movie, ImageView sharedImage);
 
-        void loadMoreMovies(List<Movie> movies);
-
         void showLoadingMoviesError(ErrorType errorType);
 
         void showFavorites(Cursor cursor);
@@ -33,13 +34,23 @@ public interface MoviesContract {
     }
 
     interface Presenter extends BasePresenter {
-        void loadMovies(boolean loadMore);
+        void loadMovies(boolean refresh);
 
         void openMovieDetails(Movie movie, ImageView sharedImage);
 
         Observable<MoviesResult> getMoviesObservable(String type);
 
         String getMoviesType();
+
         void loadFavorites();
+
+        void onSaveState(Bundle outSave, Parcelable rvState);
+
+        void onRestoreState(Bundle saveState);
+
+        void setMovies(ArrayList<Movie> movies);
+
+        Parcelable getRvState();
+
     }
 }

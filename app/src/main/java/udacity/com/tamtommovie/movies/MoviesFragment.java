@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -44,6 +45,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
     private GridLayoutManager mGridLayoutManager;
 
     private MoviesContract.Presenter mPresenter;
+    private Parcelable rvState;
 
 
     public MoviesFragment() {
@@ -65,7 +67,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
                 ContextCompat.getColor(getActivity(), R.color.colorAccent),
                 ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark)
         );
-        mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.loadMovies(false));
+        mSwipeRefreshLayout.setOnRefreshListener(() -> mPresenter.loadMovies(true));
     }
 
     @Override
@@ -116,29 +118,12 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
             mRvMovies.setAdapter(mMovieAdapter);
             mGridLayoutManager = new GridLayoutManager(getContext(), getResources().getInteger(R
                     .integer.grid_count));
+            if (mPresenter.getRvState() != null)
+                mGridLayoutManager.onRestoreInstanceState(mPresenter.getRvState());
             mRvMovies.setLayoutManager(mGridLayoutManager);
-            mRvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    if (Constants.TabsType.FAVORITE_TAB.equals(MyApplication.getPrefManager()
-                            .getString(Constants.PrefKeys.LAST_SELECTED_TAB)))
-                        return;
-                    int visibleItemCount = mGridLayoutManager.getChildCount();
-                    int totalItemCount = mGridLayoutManager.getItemCount();
-                    int firstVisibleItemPosition = mGridLayoutManager
-                            .findFirstVisibleItemPosition();
-                    // Load more if we have reach the end to the recyclerView
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
-                            firstVisibleItemPosition >= 0) {
-                        mLoadMoreView.post(() -> mLoadMoreView.setVisibility(View.VISIBLE));
-                        mPresenter.loadMovies(true);
-                    }
-                }
-            });
-        } else
-
-        {
+        } else {
+            if (mPresenter.getRvState() != null)
+                mGridLayoutManager.onRestoreInstanceState(mPresenter.getRvState());
             mGridLayoutManager.setSpanCount(getResources().getInteger(R
                     .integer.grid_count));
             mMovieAdapter.updateMovies(movies);
@@ -165,11 +150,6 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
         startActivity(intent, options.toBundle());
     }
 
-    @Override
-    public void loadMoreMovies(List<Movie> movies) {
-        mLoadMoreView.setVisibility(View.GONE);
-        mMovieAdapter.addMoreMovies(movies);
-    }
 
     @Override
     public void showLoadingMoviesError(ErrorType errorType) {
@@ -178,7 +158,7 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
         mSnackbar = Snackbar.make(getActivity().findViewById(R.id.coordinatorLayout), errorType
                 .errorText, LENGTH_INDEFINITE).setAction
                 (R.string.refresh, v -> {
-                    mPresenter.loadMovies(false);
+                    mPresenter.loadMovies(true);
                     mSnackbar.dismiss();
                 });
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)
@@ -203,15 +183,31 @@ public class MoviesFragment extends BaseFragment implements MoviesContract.View 
     }
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mGridLayoutManager != null)
+            mPresenter.onSaveState(outState, mGridLayoutManager.onSaveInstanceState());
+
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            mPresenter.onRestoreState(savedInstanceState);
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mPresenter.unsubscribe();
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-
         if (mMovieAdapter != null && mMovieAdapter.getItemCount() > 0)
             return;
         mPresenter.subscribe();

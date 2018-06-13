@@ -34,7 +34,7 @@ public class MoviesActivity extends AppCompatActivity {
                             Constants.MoviesType.POPULAR);
                     MyApplication.getPrefManager().putString(Constants.PrefKeys
                             .LAST_SELECTED_TAB, Constants.TabsType.POPULAR_TAB);
-                    mMoviesPresenter.loadMovies(false);
+                    mMoviesPresenter.loadMovies(true);
                     setTitle(R.string.popular_movies);
                     return true;
                 case R.id.navigation_top_rated:
@@ -42,7 +42,7 @@ public class MoviesActivity extends AppCompatActivity {
                             Constants.MoviesType.TOP_RATED);
                     MyApplication.getPrefManager().putString(Constants.PrefKeys
                             .LAST_SELECTED_TAB, Constants.TabsType.TOP_RATED_TAB);
-                    mMoviesPresenter.loadMovies(false);
+                    mMoviesPresenter.loadMovies(true);
                     setTitle(R.string.top_rated_movies);
                     return true;
                 case R.id.navigation_favorite:

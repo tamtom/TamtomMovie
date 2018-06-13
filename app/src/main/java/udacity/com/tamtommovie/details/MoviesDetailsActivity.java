@@ -31,6 +31,8 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import mehdi.sakout.fancybuttons.FancyButton;
 import udacity.com.tamtommovie.R;
 import udacity.com.tamtommovie.model.Movie;
+import udacity.com.tamtommovie.model.MovieReviews;
+import udacity.com.tamtommovie.model.Videos;
 import udacity.com.tamtommovie.util.DateUtil;
 import udacity.com.tamtommovie.util.ImageUtil;
 
@@ -93,14 +95,14 @@ public class MoviesDetailsActivity extends AppCompatActivity implements MoviesDe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_details);
         ButterKnife.bind(this);
-        if (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT < 21) {
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT <  Build.VERSION_CODES.LOLLIPOP) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
         }
-        if (Build.VERSION.SDK_INT >= 19) {
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.KITKAT) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
-        if (Build.VERSION.SDK_INT >= 21) {
+        if (Build.VERSION.SDK_INT >=  Build.VERSION_CODES.LOLLIPOP) {
             setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
@@ -114,6 +116,8 @@ public class MoviesDetailsActivity extends AppCompatActivity implements MoviesDe
         }
         mPresenter = new MoviesDetailsPresenter(this);
         mPresenter.loadMovieDetail(movie.getId());
+        mPresenter.loadMovieReviews(movie.getId());
+        mPresenter.loadMovieTrailers(movie.getId());
         favoriteToggle.setEnabled(false);
         mPresenter.getFavoriteStatus(movie.getId());
         setupViews(movie);
@@ -167,7 +171,6 @@ public class MoviesDetailsActivity extends AppCompatActivity implements MoviesDe
         mToolbarTitle.setText(movie.getTitle());
 
 
-
     }
 
     @Override
@@ -190,22 +193,30 @@ public class MoviesDetailsActivity extends AppCompatActivity implements MoviesDe
         Picasso.get().load(ImageUtil.getCoverImage(movie.getBackdropPath()))
                 .into(ivmovieCover);
 
-        setUpTrailers(movie);
-        setUpReviews(movie);
         mMovie = movie;
 
     }
 
-    private void setUpReviews(Movie movie) {
-        ReviewsAdapter reviewsAdapter = new ReviewsAdapter(movie.getReviews().getReviews());
+    @Override
+    public void onTrailersLoaded(Videos videos) {
+        setUpTrailers(videos);
+    }
+
+    @Override
+    public void onReviewsLoaded(MovieReviews movieReviews) {
+        setUpReviews(movieReviews);
+    }
+
+    private void setUpReviews(MovieReviews movieReviews) {
+        ReviewsAdapter reviewsAdapter = new ReviewsAdapter(movieReviews.getReviews());
         rvReviews.setLayoutManager(new LinearLayoutManager(this));
         rvReviews.setNestedScrollingEnabled(false);
         rvReviews.setAdapter(reviewsAdapter);
 
     }
 
-    private void setUpTrailers(Movie movie) {
-        VideosAdapter videosAdapter = new VideosAdapter(movie.getVideos().getVideos(), video -> {
+    private void setUpTrailers(Videos videos) {
+        VideosAdapter videosAdapter = new VideosAdapter(videos.getVideos(), video -> {
             lunchYoutube(video.getKey());
         });
         rvTrailers.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,

@@ -1,9 +1,12 @@
 package udacity.com.tamtommovie.movies;
 
 import android.database.Cursor;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -32,8 +35,11 @@ public class MoviesPresenter implements MoviesContract.Presenter {
     @NonNull
     private CompositeDisposable mCompositeDisposable;
     private final FavoriteMoviesRepository mFavoriteMoviesRepository;
-    int mCurrentPopularPage = 1;
-    int mCurrentTopRatedPage = 1;
+    private int mCurrentPopularPage = 1;
+    private int mCurrentTopRatedPage = 1;
+    private ArrayList<Movie> savedMoviesList;
+    private Parcelable rvState;
+
 
     public MoviesPresenter(@NonNull APIService apiService, @NonNull MoviesContract.View
             moviesView) {
@@ -63,20 +69,24 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
 
     @Override
-    public void loadMovies(boolean loadMore) {
-        handlePagination(loadMore);
-        mMoviesView.setLoadingIndicator(!loadMore);
+    public void loadMovies(boolean refresh) {
+        if (!refresh && savedMoviesList != null && !savedMoviesList.isEmpty()) {
+            mMoviesView.showMovies(savedMoviesList);
+            return;
+        }
+        mMoviesView.setLoadingIndicator(true);
         mCompositeDisposable.add(getMoviesObservable(getMoviesType())
                 .map(MoviesResult::getResults)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<List<Movie>>() {
                     @Override
                     public void onNext(List<Movie> movies) {
-                        if (loadMore) {
-                            mMoviesView.loadMoreMovies(movies);
-                        } else {
-                            mMoviesView.showMovies(movies);
-                        }
+                        mMoviesView.showMovies(movies);
+                        if (refresh && savedMoviesList != null)
+                            savedMoviesList.clear();
+                        if (savedMoviesList == null)
+                            savedMoviesList = new ArrayList<>();
+                        savedMoviesList.addAll(movies);
                     }
 
                     @Override
@@ -90,16 +100,6 @@ public class MoviesPresenter implements MoviesContract.Presenter {
                         mMoviesView.setLoadingIndicator(false);
                     }
                 }));
-    }
-
-    private void handlePagination(boolean loadMore) {
-        if (MyApplication.getPrefManager().getString(Constants.PrefKeys.LAST_SELECTED_TAB).equals
-                (Constants.TabsType.POPULAR_TAB)) {
-            mCurrentPopularPage = loadMore ? (mCurrentPopularPage += 1) : 1;
-
-        } else {
-            mCurrentTopRatedPage = loadMore ? (mCurrentTopRatedPage += 1) : 1;
-        }
     }
 
 
@@ -145,5 +145,30 @@ public class MoviesPresenter implements MoviesContract.Presenter {
 
             }
         }));
+    }
+
+    @Override
+    public void onSaveState(Bundle outstate, Parcelable rvState) {
+        outstate.putParcelable(Constants.RV_STATE, rvState);
+        outstate.putParcelableArrayList(Constants.MOVIES_STATE, savedMoviesList);
+
+
+    }
+
+    @Override
+    public void onRestoreState(Bundle savedState) {
+        savedMoviesList = savedState.getParcelableArrayList(Constants.MOVIES_STATE);
+        rvState = savedState.getParcelable(Constants.RV_STATE);
+
+    }
+
+    @Override
+    public void setMovies(ArrayList<Movie> movies) {
+        savedMoviesList = movies;
+    }
+
+    @Override
+    public Parcelable getRvState() {
+        return rvState;
     }
 }

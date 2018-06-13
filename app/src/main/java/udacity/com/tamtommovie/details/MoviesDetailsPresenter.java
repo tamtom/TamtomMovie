@@ -9,7 +9,9 @@ import udacity.com.tamtommovie.api.APIService;
 import udacity.com.tamtommovie.api.RetrofitWrapper;
 import udacity.com.tamtommovie.favorites.FavoriteMoviesRepository;
 import udacity.com.tamtommovie.model.Movie;
+import udacity.com.tamtommovie.model.MovieReviews;
 import udacity.com.tamtommovie.model.Video;
+import udacity.com.tamtommovie.model.Videos;
 import udacity.com.tamtommovie.util.Constants;
 
 /**
@@ -41,7 +43,7 @@ public class MoviesDetailsPresenter implements MoviesDetailsContract.Presenter {
 
     @Override
     public void loadMovieDetail(long id) {
-        mAPIService.getMovieDetails(id, Constants.MOVIE_DETAIL_APPEND_TO_RESPONSE)
+        mCompositeDisposable.add(mAPIService.getMovieDetails(id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<Movie>() {
                     @Override
@@ -56,7 +58,49 @@ public class MoviesDetailsPresenter implements MoviesDetailsContract.Presenter {
                     @Override
                     public void onComplete() {
                     }
-                });
+                }));
+    }
+
+    @Override
+    public void loadMovieTrailers(long id) {
+        mCompositeDisposable.add(mAPIService.getMovieTrailers(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<Videos>() {
+                    @Override
+                    public void onNext(Videos videos) {
+                        mView.onTrailersLoaded(videos);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                }));
+
+    }
+
+    @Override
+    public void loadMovieReviews(long id) {
+        mCompositeDisposable.add(mAPIService.getMovieReviws(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<MovieReviews>() {
+                    @Override
+                    public void onNext(MovieReviews movieReviews) {
+                        mView.onReviewsLoaded(movieReviews);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                }));
+
     }
 
     @Override

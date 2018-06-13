@@ -7,11 +7,12 @@ package udacity.com.tamtommovie.util;
 public interface Constants {
     String API_BASE_URL = "https://api.themoviedb.org/3/";
     String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/";
-    String MOVIE_DETAIL_APPEND_TO_RESPONSE = "videos,reviews";
     String PATH_POSTER_W185 = "w342";
     String PATH_BACKDROP_W780 = "w780";
     String POSTER_URL = IMAGE_BASE_URL + PATH_POSTER_W185;
     String BACKDROP_URL = IMAGE_BASE_URL + PATH_BACKDROP_W780;
+    String RV_STATE = "rvstate";
+    String MOVIES_STATE = "listMovies";
 
     interface PrefKeys {
         String MOVIES_TYPE_KEY = "movies_type";
@@ -21,7 +22,7 @@ public interface Constants {
     interface MoviesType {
         String POPULAR = "popular";
         String TOP_RATED = "top_rated";
-        String FAVORITE  = "favorite";
+        String FAVORITE = "favorite";
     }
 
     interface TabsType {
